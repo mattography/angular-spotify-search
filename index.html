@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html class=''>
+<head>
+  <meta charset='UTF-8'><meta name="robots" content="noindex">
+  <title>AMC Music Search</title>
+  <link rel='stylesheet prefetch' href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css'>
+  <link rel='stylesheet prefetch' href='//cdnjs.cloudflare.com/ajax/libs/animate.css/3.2.6/animate.min.css'>
+  <link rel='stylesheet prefetch' href='dist/css/styles.css'>
+</head>
+<body ng-app="myApp" ng-controller="MusicController">
+<div class="container-fluid outerdiv">
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#"><b>AMC</b> <span class="span-style">Music Search</span></a>
+      </div>
+    </div>
+  </nav>
+
+
+  <div class="animated zoomInRight">
+    <div id="main-info" class="col-md-6 col-xs-12">
+      <div class="input-group search-bar">
+        <input type="text"
+               ng-model="search"
+               ng-model-options="{ debounce: 800 }"
+               onclick="select()"
+               class="form-control"
+               placeholder="Search for songs by title, artist or album"  />
+        <span class="input-group-addon bar-style"><i class="glyphicon glyphicon-search"></i></span>
+      </div>
+      <div ng-show="isTheDataLoaded">
+        <div ng-repeat="song in details">
+          <section class="col-xs-12 col-sm-6 col-md-12">
+          		<article class="search-result row">
+          			<div class="col-xs-12 col-sm-12 col-md-3">
+          				<a ng-href="{{song.external_urls.spotify}}" title="{{song.name}}" class="thumbnail"><img src="{{song.album.images[0].url}}" alt="{{song.name}}" /></a>
+          			</div>
+          			<div class="col-xs-12 col-sm-12 col-md-2">
+          				<ul class="meta-search">
+          					<li><i class="glyphicon glyphicon-user"></i> <span>{{song.followers.total}}</span></li>
+          					<li><i class="glyphicon glyphicon-fire"></i> <span>{{song.popularity}}</span></li>
+          					<li><i class="glyphicon glyphicon-tags"></i> <span>{{song.type}}</span></li>
+          				</ul>
+          			</div>
+          			<div class="col-xs-12 col-sm-12 col-md-7 excerpet">
+          				<h3><a ng-href="#" title="">{{song.name}}</a></h3>
+                  <span class="plus"><a ng-href="#" ng-click="addItem(song)" id="{{song.name}}" title="{{artist.name}}"><i class="glyphicon glyphicon-plus"></i></a></span>
+          			</div>
+          		</article>
+            </section>
+        </div>
+      </div>
+
+      <div class="search-message" ng-show="!isTheDataLoaded">
+        Please enter a search
+      </div>
+    </div>
+    <div class="col-md-6 col-xs-12">
+        <div class="playlist">
+          <input class="form-control playlist-title" type="text" ng-model="playlistTitle" placeholder="enter title of playlist" />
+          <br />
+          <input type="button" value="Export JSON" class="btn btn-default" ng-click="ShowHide()" />
+          <div class="well" ng-show="IsVisible">
+          [
+              title: '{{playlistTitle}}'
+              songs: [
+            <div ng-repeat="song in selectedSongs">
+            <div class="song" ng-repeat="artist in song.artists ">
+              {
+                  album: '{{song.name}}',
+                  artist: '{{artist.name}}',
+                  note: '{{song.note}}',
+                  coverImage: '{{song.image}}'
+                },
+            </div>
+          </div>
+              ]
+          ]
+        </div>
+          <div class="songs" ng-repeat="song in selectedSongs track by $index | limitTo:listLimit">
+            <h5 ng-model="song.name">{{song.name}}</h5>
+            <input type="text" ng-model="song.note" placeholder="add note">
+            <input type="text" ng-model="song.image" placeholder="add image url">
+            <a class="remove-icon" ng-click="remove(song)"><i class="glyphicon glyphicon-remove"></i></a>
+          </div>
+        </div>
+      </div>
+</div>
+</div>
+<script src='//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js'></script>
+<script src="node_modules/lodash/lodash.min.js"></script>
+<script type="text/javascript" src="bundle.js" charset="utf-8"></script>
+</body>
+</html>

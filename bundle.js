@@ -99,6 +99,7 @@ angular.module('myApp', []).controller('MusicController', function($scope, $http
         console.log(response.data.tracks.items);
         $scope.isTheDataLoaded = true;
         $scope.details = response.data.tracks.items;
+        mixpanel.track('Search Term', {'Song': document.getElementById("search-term").value});
       });
   }
 
